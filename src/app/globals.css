@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Shadcn/UI Colors - Light Theme */
+  --color-background: #F8F4F0; /* Matches Background Light from HLD */
+  --color-foreground: #1F2937; /* Matches Text Primary from HLD */
+
+  --color-card: #FFFFFF; /* Matches White from HLD */
+  --color-card-foreground: #1F2937; /* Matches Text Primary from HLD */
+
+  --color-popover: #FFFFFF; /* Matches White from HLD */
+  --color-popover-foreground: #1F2937; /* Matches Text Primary from HLD */
+
+  --color-primary: #A855F7; /* Matches Primary Purple from HLD */
+  --color-primary-foreground: #FFFFFF; /* White for contrast */
+
+  --color-secondary: #F97316; /* Matches Secondary Coral from HLD */
+  --color-secondary-foreground: #FFFFFF; /* White for contrast */
+
+  --color-muted: #6B7280; /* Matches Text Secondary from HLD */
+  --color-muted-foreground: #1F2937; /* Matches Text Primary from HLD */
+
+  --color-accent: #F8F4F0; /* Matches Background Light from HLD */
+  --color-accent-foreground: #1F2937; /* Matches Text Primary from HLD */
+
+  --color-destructive: #EF4444; /* Matches Accent Red from HLD */
+  --color-destructive-foreground: #FFFFFF; /* White for contrast */
+
+  --color-border: #E5E5E5; /* Default border, adjust if needed */
+  --color-input: #E5E5E5; /* Default input, adjust if needed */
+  --color-ring: #A855F7; /* Primary Purple for focus rings */
+
+  /* Chart colors (default shadcn, not explicitly in HLD) */
+  --color-chart-1: #e67e22;
+  --color-chart-2: #2d8659;
+  --color-chart-3: #1e3a5f;
+  --color-chart-4: #f1c40f;
+  --color-chart-5: #e74c3c;
+
+  /* Sidebar colors (default shadcn, not explicitly in HLD) */
+  --color-sidebar: #f7f7f7;
+  --color-sidebar-foreground: #404040;
+  --color-sidebar-primary: #1a1a1a;
+  --color-sidebar-primary-foreground: #fafafa;
+  --color-sidebar-accent: #f0f0f0;
+  --color-sidebar-accent-foreground: #1a1a1a;
+  --color-sidebar-border: #d4d4d8;
+  --color-sidebar-ring: #3b82f6;
+
+  /* Radius (default shadcn, adjust if needed) */
+  --radius-lg: 0.75rem; /* Adjusted to 12px from HLD */
+  --radius-md: calc(0.75rem - 2px);
+  --radius-sm: calc(0.75rem - 4px);
+
+  /* Animations (default shadcn) */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  /* Additional Design System Colors */
+  --color-hero-gradient-start: #A855F7; /* Primary Purple */
+  --color-hero-gradient-end: #F97316; /* Secondary Coral */
+  --color-footer-background: #EF4444; /* Accent Red */
+
+  /* Typography */
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border);
+  }
+
+  :root {
+    /* Shadcn/UI CSS Variables - Light Theme */
+    --background: var(--color-background);
+    --foreground: var(--color-foreground);
+    --card: var(--color-card);
+    --card-foreground: var(--color-card-foreground);
+    --popover: var(--color-popover);
+    --popover-foreground: var(--color-popover-foreground);
+    --primary: var(--color-primary);
+    --primary-foreground: var(--color-primary-foreground);
+    --secondary: var(--color-secondary);
+    --secondary-foreground: var(--color-secondary-foreground);
+    --muted: var(--color-muted);
+    --muted-foreground: var(--color-muted-foreground);
+    --accent: var(--color-accent);
+    --accent-foreground: var(--color-accent-foreground);
+    --destructive: var(--color-destructive);
+    --destructive-foreground: var(--color-destructive-foreground);
+    --border: var(--color-border);
+    --input: var(--color-input);
+    --ring: var(--color-ring);
+    --chart-1: var(--color-chart-1);
+    --chart-2: var(--color-chart-2);
+    --chart-3: var(--color-chart-3);
+    --chart-4: var(--color-chart-4);
+    --chart-5: var(--color-chart-5);
+    --radius: var(--radius-lg); /* Use the largest radius as default */
+    --sidebar-background: var(--color-sidebar);
+    --sidebar-foreground: var(--color-sidebar-foreground);
+    --sidebar-primary: var(--color-sidebar-primary);
+    --sidebar-primary-foreground: var(--color-sidebar-primary-foreground);
+    --sidebar-accent: var(--color-sidebar-accent);
+    --sidebar-accent-foreground: var(--color-sidebar-accent-foreground);
+    --sidebar-border: var(--color-sidebar-border);
+    --sidebar-ring: var(--color-sidebar-ring);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--foreground);
+    background-color: var(--background);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--foreground);
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-size: 3.5rem; /* 56px */
+    font-weight: 400;
+    letter-spacing: -0.025em; /* tight */
+  }
+
+  h2 {
+    font-size: 2.5rem; /* 40px */
+    font-weight: 500;
+  }
+
+  h3 {
+    font-size: 2rem; /* 32px */
+    font-weight: 500;
+  }
+
+  p {
+    font-size: 1.125rem; /* 18px */
+    font-weight: 400;
+  }
+
+  small {
+    font-size: 0.875rem; /* 14px */
+    font-weight: 400;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem; /* 24px */
+    padding-right: 1.5rem; /* 24px */
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      padding-left: 2rem; /* Adjust as needed for larger screens */
+      padding-right: 2rem; /* Adjust as needed for larger screens */
+    }
+  }
+}
+
+/* Hide Next.js error overlay portal */
+nextjs-portal {
+  display: none !important;
+}
