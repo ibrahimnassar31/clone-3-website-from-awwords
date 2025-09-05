@@ -55,7 +55,7 @@ const Footer = () => {
                 {expanded ? (
                     <div className="flex flex-col items-center justify-center w-full h-full gap-6 text-center">
                         <h2 className="text-3xl md:text-5xl font-bold mb-2">Let's work together</h2>
-                        <a href="mailto:hello@alfacharlie.co" className="text-xl md:text-2xl underline hover:text-gray-300">ibrahimnassar870@gmail.com</a>
+                        <a href="mailto:ibrahimnassar870@gmail.com" className="text-xl md:text-2xl underline hover:text-gray-300">ibrahimnassar870@gmail.com</a>
                         <div className="text-base md:text-lg mt-4">
                             © 2025 Alfa Charlie LLC
                         </div>

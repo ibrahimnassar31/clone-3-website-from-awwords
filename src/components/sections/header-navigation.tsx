@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
 import Link from "next/link";
 
 const NavLogoIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -42,6 +43,21 @@ const CloseIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export default function HeaderNavigation() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const navLinksRef = useRef<Array<HTMLLIElement | null>>([]);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      gsap.from(headerRef.current, {
+        y: -60,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power4.out",
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,6 +69,66 @@ export default function HeaderNavigation() {
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "auto";
+    if (menuRef.current) {
+      if (isMenuOpen) {
+        const tl = gsap.timeline();
+        tl.to(menuRef.current, {
+          scale: 1,
+          opacity: 1,
+          duration: 0.7,
+          ease: "power4.out",
+          pointerEvents: "auto",
+        });
+        tl.fromTo(
+          navLinksRef.current,
+          { y: 40, opacity: 0, color: "#fff" },
+          {
+            y: 0,
+            opacity: 1,
+            color: "#fbbf24", // amber-400
+            stagger: 0.08,
+            duration: 0.6,
+            ease: "back.out(1.7)",
+          },
+          "-=0.4"
+        );
+        tl.from(
+          hamburgerRef.current,
+          {
+            rotation: 90,
+            scale: 0.7,
+            opacity: 0.5,
+            duration: 0.5,
+            ease: "power2.out",
+          },
+          "-=0.5"
+        );
+      } else {
+        gsap.to(menuRef.current, {
+          scale: 0.95,
+          opacity: 0,
+          duration: 0.5,
+          ease: "power4.in",
+          pointerEvents: "none",
+        });
+        gsap.to(navLinksRef.current, {
+          y: 40,
+          opacity: 0,
+          duration: 0.3,
+          stagger: 0.05,
+          ease: "power1.in",
+        });
+      }
+    }
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen]);
 
   const navLinks = [
@@ -67,6 +143,7 @@ export default function HeaderNavigation() {
   return (
     <>
       <header
+        ref={headerRef}
         className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ease-in-out ${
           isMenuOpen ? "" : isScrolled ? "bg-background/80 backdrop-blur-sm shadow-sm" : "bg-transparent"
         } ${isScrolled && !isMenuOpen ? "text-foreground" : "text-white"}`}
@@ -86,7 +163,12 @@ export default function HeaderNavigation() {
             </div>
             <div className="flex items-center gap-4 lg:gap-6 justify-end">
               <p className="hidden md:block text-xs font-medium uppercase tracking-[0.2em]">Women-owned creative agency</p>
-              <button onClick={() => setMenuOpen(!isMenuOpen)} aria-label="Toggle Menu" className="z-50 relative h-8 w-8">
+              <button
+                ref={hamburgerRef}
+                onClick={() => setMenuOpen(!isMenuOpen)}
+                aria-label="Toggle Menu"
+                className="z-50 relative h-8 w-8"
+              >
                 <span className={`absolute inset-0 transition-opacity duration-300 ${isMenuOpen ? "opacity-0" : "opacity-100"}`}>
                   <HamburgerIcon className={`w-8 h-auto ${isScrolled && !isMenuOpen ? "text-foreground" : "text-white"}`} />
                 </span>
@@ -100,17 +182,25 @@ export default function HeaderNavigation() {
       </header>
 
       <div
+        ref={menuRef}
         className={`fixed inset-0 bg-background z-30 transition-transform duration-500 ease-in-out ${
           isMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
+        style={{ pointerEvents: isMenuOpen ? "auto" : "none" }}
+        onClick={e => {
+          if (e.target === menuRef.current) setMenuOpen(false);
+        }}
       >
         <div className="mx-auto px-4 sm:px-6 md:px-8 h-full flex flex-col items-center justify-center">
           <nav className="flex flex-col items-center justify-center text-center">
             <ul className="flex flex-col gap-2 md:gap-4 mb-16">
-              {navLinks.map((link) => (
-                <li key={link.href}>
+              {navLinks.map((link, i) => (
+                <li
+                  key={link.href}
+                  ref={el => { navLinksRef.current[i] = el; }}
+                >
                   <Link href={link.href} onClick={() => setMenuOpen(false)}>
-                    <span className="text-4xl md:text-6xl text-foreground font-light hover:text-primary transition-colors duration-300">
+                    <span className="text-4xl md:text-6xl text-amber-400 font-bold uppercase hover:text-primary transition-colors duration-300" style={{opacity: isMenuOpen ? 1 : 0}}>
                       {link.label}
                     </span>
                   </Link>
@@ -119,8 +209,8 @@ export default function HeaderNavigation() {
             </ul>
             <div className="text-center text-foreground">
               <h6 className="text-sm uppercase tracking-wider mb-2">Contact:</h6>
-              <a href="mailto:hello@alfacharlie.co" className="text-3xl md:text-5xl font-light hover:text-primary transition-colors duration-300">
-                hello@alfacharlie.co
+              <a href="mailto:ibrahimnassar870@gmail.com" className="text-3xl md:text-5xl font-light hover:text-primary transition-colors duration-300">
+                ibrahimnassar870@gmail.com
               </a>
             </div>
           </nav>

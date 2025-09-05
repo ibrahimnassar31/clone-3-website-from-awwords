@@ -1,20 +1,64 @@
-import Image from 'next/image';
+'use client';
+
 import Link from 'next/link';
+import TrianglesImage from '@/components/TrianglesImage';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ServicesCta = () => {
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!contentRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const elements = Array.from(contentRef.current!.children);
+
+      gsap.from(elements, {
+        x: '50vw',
+        autoAlpha: 0,
+        skewX: 6,
+        duration: 1.1,
+        delay: 0.15,
+        ease: 'expo.out',
+        stagger: 0.12,
+        clearProps: 'transform,opacity',
+        scrollTrigger: {
+          trigger: contentRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      });
+    }, contentRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section className="bg-background py-20 md:py-32">
       <div className="container grid gap-12 md:grid-cols-2 md:items-end lg:gap-24">
         <div className="relative w-full">
-          <Image
+          <TrianglesImage
             src="https://cdn.sanity.io/images/yy4n24b1/production/b539140ad9dc7e8feef86b333fb27c416a781386-1266x1615.jpg"
-            alt="project illustration"
             width={1266}
             height={1615}
-            className="h-auto w-full rounded-lg object-cover"
+            explode={220}
+            cols={50}
+            rows={36}
+            duration={1.4}
+            once={true}          
+            scrub={false}        
+            start="top 80%"      
+            end="bottom 60%"
+            className="rounded-lg overflow-hidden"
           />
+
         </div>
-        <div className="flex flex-col">
+
+        <div className="flex flex-col" ref={contentRef}>
           <h3 className="text-[2rem] font-medium leading-[1.2] text-foreground">
             Strategic brand development and web design that turns femtech startups into healthcare leaders.
           </h3>
